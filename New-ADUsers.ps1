@@ -22,7 +22,7 @@ function New-Adusers {
             -Surname $_.LastName `
             -EmployeeID $_.EmployeeID `
             -DisplayName $($_.FirstName + " " + $_.LastName) `
-            -UserPrincipalName $($_.FirstName + "." + $_.LastName + "@wilson-networking.com") `
+            -UserPrincipalName $($_.FirstName + "." + $_.LastName + "@example.com") `
             -AccountPassword `
             -Enabled $true
     }

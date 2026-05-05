@@ -1,29 +1,24 @@
 #Script to create new user manually or from CSV
 
-function New-Adusers {
-    
-    #Install AD Module
-    Import-Module ActiveDirectory
-      
-    #Define Parameters
-    param ([Parameter(Mandatory=$false)]
-        [string]$Path
+function New-ADUsers {
+    param (
+        [Parameter(Mandatory=$false)]
+        [string]$Path = "C:\Scripts\CSVs\NewUsers.csv"
     )
-    
-    #Get CSV Data
-    $Path = "C:\Scripts\CSVs\NewUsers.csv"
-    $NewUserData = Import-Csv -Path $Path 
-    
-    #Start Combining and Creating User
-    foreach($n in $NewUserData){
-        New-Aduser `
-            -Name $($_.FirstName + " " + $_.LastName) `
-            -GivenName $_.FirstName `
-            -Surname $_.LastName `
-            -EmployeeID $_.EmployeeID `
-            -DisplayName $($_.FirstName + " " + $_.LastName) `
-            -UserPrincipalName $($_.FirstName + "." + $_.LastName + "@example.com") `
-            -AccountPassword `
+
+    Import-Module ActiveDirectory
+
+    $NewUserData = Import-Csv -Path $Path
+
+    foreach ($n in $NewUserData) {
+        New-ADUser `
+            -Name "$($n.FirstName) $($n.LastName)" `
+            -GivenName $n.FirstName `
+            -Surname $n.LastName `
+            -EmployeeID $n.EmployeeID `
+            -DisplayName "$($n.FirstName) $($n.LastName)" `
+            -UserPrincipalName "$($n.FirstName).$($n.LastName)@example.com" `
+            -AccountPassword (New-RandomPassword -ConvertToSecureString) `
             -Enabled $true
     }
 }
